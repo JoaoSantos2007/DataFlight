@@ -1,10 +1,14 @@
-import express from 'express'
-import routes from './routes/index.js'
-import "./config/mysql.js"
-import "./fast/fast.js"
+import express from 'express';
+import Routes from './routes/index.js';
+import './config/mongo.js';
+import './services/fast.js';
+import NotFoundMiddleware from './middlewares/NotFound.js';
+import ErrorMiddleware from './middlewares/Error.js';
 
-//Express
-const app = express()
-routes(app)
+const app = express();
 
-export default app
+Routes(app);
+app.use(NotFoundMiddleware);
+app.use(ErrorMiddleware);
+
+export default app;

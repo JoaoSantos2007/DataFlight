@@ -1,4 +1,4 @@
-import fast from "../fast/fast.js";
+import fast from '../services/fast.js';
 
-//Use rules
-fast.use()
+// Use rules
+fast.use();
