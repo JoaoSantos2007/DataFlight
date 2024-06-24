@@ -1,49 +1,35 @@
-import Model from '../models/Device.js';
-import randomID from '../utils/randomID.js';
+import Service from '../services/Device.js';
 
 class Device {
-  // Create Device
-  static createDevice(req, res) {
-    const data = req.body;
+  static async create(req, res, next) {
+    try {
+      const info = req.body;
+      const device = await Service.create(info);
 
-    Model.create({
-      id: data.id ? data.id : randomID(),
-      name: data.name,
-      type: data.type,
-      roomID: data.roomID,
-      value: data.value,
-      mqttID: data.mqttID,
-    })
-      .then((device) => {
-        res.status(201).json({
-          created: true,
-          device,
-        });
-      })
-      .catch((error) => {
-        res.status(500).json(error);
-      });
+      return res.status(201).json({ success: true, device });
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  // Read Devices
-  static getDevices(req, res) {
-    const { id } = req.params;
+  static async read(req, res, next) {
+    try {
+      const id = req.params?.id;
 
-    if (id) {
-      res.status(200).json(req.device);
-    } else {
-      Model.findAll()
-        .then((devices) => {
-          res.status(200).json(devices);
-        })
-        .catch((error) => {
-          res.status(500).json(error);
-        });
+      if (id) {
+        const device = await Service.readById(id);
+        return res.status(200).json({ success: true, device });
+      }
+
+      const devices = await Service.readAll();
+      return res.status(200).json({ success: true, devices });
+    } catch (err) {
+      return next(err);
     }
   }
 
   // Update Device
-  static updateDevice(req, res) {
+  static update(req, res) {
     const { device } = req;
     const data = req.body;
 
@@ -65,7 +51,7 @@ class Device {
   }
 
   // Delete device
-  static deleteDevice(req, res) {
+  static delete(req, res) {
     const { device } = req;
 
     device.destroy()

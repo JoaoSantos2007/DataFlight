@@ -1,10 +1,10 @@
 import NotFoundError from '../errors/notFoundError.js';
-import UserModel from '../models/User.js';
+import Model from '../models/User.js';
 import hashPassword from '../utils/hashPassword.js';
 
 class User {
   static async register({ name, email, password }) {
-    const user = new UserModel({
+    const user = new Model({
       name,
       email,
       password: hashPassword(password),
@@ -12,12 +12,11 @@ class User {
     });
 
     await user.save();
-
     return user;
   }
 
   static async readById(id) {
-    const user = await UserModel.findById(id);
+    const user = await Model.findById(id);
 
     if (!user) throw new NotFoundError('User not found!');
 
@@ -25,7 +24,7 @@ class User {
   }
 
   static async readAll() {
-    const users = await UserModel.find();
+    const users = await Model.find();
 
     return users;
   }

@@ -34,7 +34,7 @@ const deviceSchema = new Schema({
     type: String,
     required: [true, 'The mqttID field is required!'],
   },
-});
+}, { versionKey: false });
 
 const Device = db.model('devices', deviceSchema);
 
