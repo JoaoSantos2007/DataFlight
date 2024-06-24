@@ -1,24 +1,13 @@
-import UserModel from '../models/User.js';
+/* eslint-disable dot-notation */
 import defineCookies from '../utils/defineCookies.js';
-import hashPassword from '../utils/hashPassword.js';
-import TokenService from '../services/Token.js';
+import Token from '../services/Token.js';
+import Service from '../services/User.js';
 
 class User {
-  // create user
   static async create(req, res, next) {
     try {
-      const {
-        name, email, password,
-      } = req.body;
-
-      const user = new UserModel({
-        name,
-        email,
-        password: hashPassword(password),
-        admin: false,
-      });
-
-      await user.save();
+      const info = req.body;
+      const user = await Service.register(info);
 
       return res.status(201).json({ success: true, user });
     } catch (err) {
@@ -26,24 +15,11 @@ class User {
     }
   }
 
-  // read user
-  static get(req, res) {
-    return res.status(200).json({ success: true, user: req.user });
-  }
-
-  // updtate user
-  static async update(req, res, next) {
+  static async read(req, res, next) {
     try {
-      const { user } = req;
-      const { name, img } = req.body;
-
-      if (name) {
-        user.set('name', name);
-        user.set('img', img);
-      }
-
-      await user.validate();
-      await user.save();
+      const id = req.params?.id;
+      if (!id) return res.status(200).json({ success: true, user: req.user });
+      const user = await Service.readById(id);
 
       return res.status(200).json({ success: true, user });
     } catch (err) {
@@ -51,17 +27,44 @@ class User {
     }
   }
 
-  // delete user
+  static async readAll(req, res, next) {
+    try {
+      const users = await Service.readAll();
+
+      return res.status(200).json({ success: true, users });
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  static async update(req, res, next) {
+    try {
+      const id = req.params?.id;
+      const info = req.body;
+      const { user } = req;
+
+      const userUpdated = await Service.update(id || user['_id'], info);
+
+      return res.status(200).json({ success: true, updated: true, user: userUpdated });
+    } catch (err) {
+      return next(err);
+    }
+  }
+
   static async delete(req, res, next) {
     try {
+      const id = req.params?.id;
       const { user } = req;
       const { accessToken, refreshToken } = req.cookies;
 
-      await user.deleteOne({ _id: user.id });
-      await TokenService.revokeUserTokens(accessToken, refreshToken);
-      defineCookies(req, res);
+      const userDeleted = await Service.delete(id || user['_id']);
 
-      return res.status(200).json({ success: true, user });
+      if (!id) {
+        await Token.revokeUserTokens(accessToken, refreshToken);
+        defineCookies(req, res);
+      }
+
+      return res.status(200).json({ success: true, user: userDeleted });
     } catch (err) {
       return next(err);
     }

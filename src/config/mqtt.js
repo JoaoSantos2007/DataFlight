@@ -1,19 +1,26 @@
+/* eslint-disable no-console */
 import mosquitto from 'mqtt';
+import { MQTT_PASSWORD, MQTT_URL, MQTT_USER } from '../utils/env.js';
 
-const host = process.env.MQTT_HOST;
-const port = process.env.MQTT_PORT;
-const clientId = process.env.MQTT_CLIENTID;
-const connectURL = `mqtt://${host}:${port}`;
+const clientId = 1;
 
-const mqtt = mosquitto.connect(connectURL, {
+const mqtt = mosquitto.connect(MQTT_URL, {
   clientId,
+  clean: true,
+  connectTimeout: 4000,
+  username: MQTT_USER,
+  password: MQTT_PASSWORD,
+});
+
+mqtt.on('error', (err) => {
+  console.error(err);
 });
 
 // Connected!
 mqtt.on('connect', () => {
   console.log('Connection estabilished with mqtt');
 
-  mqtt.subscribe('IOT_main', (err) => {
+  mqtt.subscribe('global', (err) => {
     if (err) {
       console.error(err);
     }

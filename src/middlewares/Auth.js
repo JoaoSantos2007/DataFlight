@@ -5,7 +5,7 @@ import Token from '../services/Token.js';
 import errorHandler from '../utils/errorHandler.js';
 
 class Auth {
-  static async verifyAuthorization(req, res, next) {
+  static async verifyAuth(req, res, next) {
     try {
       const { accessToken } = await Token.verifyExpiredTokensAndRefresh(req, res);
 

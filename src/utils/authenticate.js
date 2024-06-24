@@ -5,7 +5,7 @@ import hashPassword from './hashPassword.js';
 async function authenticate(email, password) {
   const user = await User.findOne({
     email,
-    hashPassword: hashPassword(password),
+    password: hashPassword(password),
   });
 
   if (user === null) throw new UnathorizedError('The email or password provided is incorrect!');
