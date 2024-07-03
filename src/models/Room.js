@@ -22,7 +22,7 @@ const roomSchema = new Schema({
     type: String,
     required: [true, 'The colorID field is required!'],
   },
-});
+}, { versionKey: false });
 
 const Room = db.model('rooms', roomSchema);
 

@@ -28,40 +28,27 @@ class Device {
     }
   }
 
-  // Update Device
-  static update(req, res) {
-    const { device } = req;
-    const data = req.body;
+  static async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      const info = req.body;
 
-    device.update({
-      name: data.name,
-      type: data.type,
-      value: data.value,
-      roomID: data.roomID,
-      mqttID: data.mqttID,
-    })
-      .then((device) => {
-        res.status(200).json({
-          updated: true,
-          device,
-        });
-      }).catch((error) => {
-        res.status(500).json(error);
-      });
+      const device = await Service.update(id, info);
+      return res.status(200).json({ success: true, updated: true, device });
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  // Delete device
-  static delete(req, res) {
-    const { device } = req;
+  static async delete(req, res, next) {
+    try {
+      const { id } = req.params;
 
-    device.destroy()
-      .then(() => {
-        res.status(200).json({
-          deleted: true,
-        });
-      }).catch((error) => {
-        res.status(500).json(error);
-      });
+      const device = await Service.delete(id);
+      return res.status(200).json({ success: true, deleted: true, device });
+    } catch (err) {
+      return next(err);
+    }
   }
 }
 

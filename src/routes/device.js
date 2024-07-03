@@ -5,10 +5,10 @@ import Auth from '../middlewares/Auth.js';
 const Router = express.Router();
 
 Router
-  .get('/devices', Auth.verifyAuth, Controller.read)
-  .get('/devices/:id', Auth.verifyAuth, Controller.read)
-  .post('/devices', Auth.verifyAuth, Controller.create)
-  .put('/devices/:id', Auth.verifyAuth, Controller.update)
-  .delete('/devices/:id', Auth.verifyAuth, Controller.delete);
+  .get('/device', Controller.read)
+  .get('/device/:id', Auth.verifyAuth, Controller.read)
+  .post('/device', Auth.verifyAuth, Controller.create)
+  .put('/device/:id', Auth.verifyAuth, Controller.update)
+  .delete('/device/:id', Auth.verifyAuth, Controller.delete);
 
 export default Router;

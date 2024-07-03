@@ -23,8 +23,29 @@ class Device {
 
   static async readById(id) {
     const device = await Model.findById(id);
-
     if (!device) throw new NotFound('Device not found!');
+
+    return device;
+  }
+
+  static async update(id, {
+    name, type, value, roomID, mqttID,
+  }) {
+    const device = await Device.readById(id);
+
+    if (name) device.set('name', name);
+    if (type) device.set('type', type);
+    if (value) device.set('value', value);
+    if (roomID) device.set('roomID', roomID);
+    if (mqttID) device.set('mqttID', mqttID);
+
+    await device.save();
+    return device;
+  }
+
+  static async delete(id) {
+    const device = await Device.readById(id);
+    await device.deleteOne();
 
     return device;
   }
