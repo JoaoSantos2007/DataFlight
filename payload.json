@@ -1,0 +1,10 @@
+{
+    "deviceName": "esp32",
+    "sensors": [
+        {
+            "id": "3ryidfjfhvshdvjfg",
+            "value": "true"
+        }
+    ],
+    "timestamp": "4875545547"
+}

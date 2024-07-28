@@ -1,0 +1,12 @@
+[
+    {
+        "id": "3ryidfjfhvshdvjfg",
+        "pin": [23],
+        "type": "light"
+    },
+    {
+        "id": "hfu4hvdfhvfj",
+        "pin": [34, 35],
+        "type": "TEMT100"
+    }
+]
