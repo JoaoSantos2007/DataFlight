@@ -20,7 +20,7 @@ mqtt.on('error', (err) => {
 mqtt.on('connect', () => {
   console.log('Connection estabilished with mqtt');
 
-  mqtt.subscribe('global', (err) => {
+  mqtt.subscribe('global2', (err) => {
     if (err) {
       console.error(err);
     }

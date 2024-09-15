@@ -1,5 +1,6 @@
 import mqtt from '../config/mqtt.js';
 import Device from '../models/Device.js';
+import Event from '../models/Event.js';
 
 class Fast {
   constructor(topic) {
@@ -10,15 +11,18 @@ class Fast {
 
   // Catch all messages to IOT_main topic
   seeMessages = () => {
-    mqtt.on('message', (topic, payload) => {
-      this.receiveMessage(payload, topic);
+    mqtt.on('message', async (topic, payload) => {
+      const objMQTT = JSON.parse(payload);
+
+      const event = new Event(objMQTT);
+      await event.save();
     });
   };
 
   // Receive message from devices
   receiveMessage(payload, topic) {
     console.log(`Receiving: ${payload.toString()} from ${topic}`);
-    this.updateValues(payload);
+    // this.updateValues(payload);
   }
 
   // Update the values after receive a message from a device
